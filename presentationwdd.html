@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PhilScan Pathways - Strand and Course Selection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      background: url('https://i.pinimg.com/originals/b9/b8/1a/b9b81ab0e549a0ef6bbd9616e32031d5.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    header {
+      background-color: rgba(0, 0, 0, 0.9);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+      padding: 10px 0;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+    }
+
+    nav div:first-child {
+      font-size: 2em;
+      font-weight: bold;
+      color: white;
+    }
+
+    nav div:first-child span {
+      color: #E50914;
+    }
+
+    nav div:last-child {
+      display: flex;
+      gap: 50px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1em;
+    }
+
+    nav a:hover {
+      color: #E50914;
+    }
+
+    main {
+      padding-top: 130px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 50px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      width: 90%;
+      max-width: 900px;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #E50914;
+    }
+
+    h2 {
+      font-size: 2em;
+      margin: 20px 0;
+    }
+
+    #home {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    section {
+      padding: 60px 20px;
+      max-width: 900px;
+    }
+
+    #contact form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #contact form input,
+    #contact form textarea {
+      padding: 14px;
+      background: #222;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    #contact form button {
+      padding: 14px;
+      background-color: #E50914;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    select {
+      padding: 12px;
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      font-size: 1em;
+    }
+
+    .recommendations,
+    .course-details {
+      margin-top: 30px;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 25px;
+      border-radius: 10px;
+      font-size: 1.05em;
+    }
+
+    .recommendations ul {
+      list-style: none;
+    }
+
+    .recommendations li {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .recommendations li:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .course-details p {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    .course-details span {
+      color: #ccc;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.85);
+      color: #aaa;
+      font-size: 0.9em;
+      margin-top: 40px;
+    }
+
+    #topBtn {
+      display: none;
+      position: fixed;
+      bottom: 40px;
+      right: 30px;
+      z-index: 99;
+      background-color: #E50914;
+      color: white;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    #topBtn:hover {
+      background-color: #c40810;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <header>
+    <nav>
+      <div><span>Phil</span>Scan Pathways</div>
+      <div>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="container">
+      <h1>PhilScan Pathways</h1>
+      <h2>Strand and Course Selection</h2>
+      <div>
+        <label for="strand">Select Your Strand:</label><br>
+        <select id="strand" onchange="showCourses()">
+          <option value="">-- Select a Strand --</option>
+          <option value="stem">STEM</option>
+          <option value="abm">ABM</option>
+          <option value="humss">HUMSS</option>
+          <option value="gas">GAS</option>
+          <option value="tvl">TVL</option>
+        </select>
+      </div>
+
+      <div id="recommendations" class="recommendations" style="display: none;">
+        <h3>Recommended Courses for Your Strand:</h3>
+        <ul id="recommendation-list"></ul>
+        <p id="strand-reason"></p>
+      </div>
+
+      <div id="course-details" class="course-details" style="display: none;">
+        <h4>Course Name: <span id="course-name"></span></h4>
+        <p><strong>Program:</strong> <span id="course-program"></span></p>
+        <p><strong>Skills You’ll Gain:</strong> <span id="course-skills"></span></p>
+        <p><strong>Job Opportunities:</strong> <span id="course-jobs"></span></p>
+        <p><strong>Department:</strong> <span id="course-department"></span></p>
+      </div>
+    </section>
+
+    <section id="about" class="container">
+      <h2>About PhilScan Pathways</h2>
+      <p>"Every journey starts with a choice—and at PhilScan Pathways, we make sure it’s the right one. Designed especially for senior high school students, our platform recommends aviation courses based on your chosen strand, interests, and strengths. Think of us as your personal co-pilot, helping you navigate toward a future filled with purpose, passion, and success."</p>
+    </section>
+
+    <section id="contact" class="container">
+      <h2>Contact Us</h2>
+      <form id="contactForm" onsubmit="showConfirmation(event)">
+        <label for="name">Name</label>
+        <input type="text" id="name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+
+        <label for="message">Message</label>
+        <textarea id="message" rows="5" required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 PhilScan Pathways. All rights reserved.
+  </footer>
+
+  <button onclick="scrollToTop()" id="topBtn" title="Go to top">↑</button>
+
+  <script>
+    const courseDetails = {
+      "BS in Aeronautical Engineering (INET)": {
+        program: "Focuses on aircraft design, testing, and production.",
+        skills: "Design, Systems Engineering, Mechanics.",
+        jobOpportunities: "Aeronautical Engineer, Safety Engineer.",
+        department: "INET"
+      },
+      "BS in Air Transportation Major in Advanced Flying (INET)": {
+        program: "Prepares students for commercial flying careers.",
+        skills: "Flight Operations, Aircraft Systems.",
+        jobOpportunities: "Pilot, Airline Manager.",
+        department: "INET"
+      },
+      "BS in Aircraft Maintenance Technology (INET)": {
+        program: "Prepares students for repair and inspection roles.",
+        skills: "Troubleshooting, Mechanics.",
+        jobOpportunities: "Maintenance Technician.",
+        department: "INET"
+      },
+      "BS in Aviation Electronics Technology (INET)": {
+        program: "Covers communication and navigation systems.",
+        skills: "Avionics, Circuits.",
+        jobOpportunities: "Avionics Engineer.",
+        department: "INET"
+      },
+      "Aviation Tourism Major in Travel Management (ILAS)": {
+        program: "Mix of aviation and tourism management.",
+        skills: "Travel Coordination, Customer Service.",
+        jobOpportunities: "Travel Manager.",
+        department: "ILAS"
+      },
+      "Aviation Safety and Security Management (ILAS)": {
+        program: "Focuses on managing aviation safety systems.",
+        skills: "Crisis Management, Security Design.",
+        jobOpportunities: "Safety Manager.",
+        department: "ILAS"
+      },
+      "Aviation Logistics (ILAS)": {
+        program: "Focuses on aviation supply chain.",
+        skills: "Logistics Systems, Warehousing.",
+        jobOpportunities: "Logistics Officer.",
+        department: "ILAS"
+      },
+      "Aviation Communication Major in Flight Operations (ILAS)": {
+        program: "For careers in aviation operations and ATC.",
+        skills: "Flight Planning, ATC Protocols.",
+        jobOpportunities: "Dispatcher, Controller.",
+        department: "ILAS"
+      },
+      "Aviation Information System (ICS)": {
+        program: "IT systems and databases for aviation.",
+        skills: "Systems Admin, Data Management.",
+        jobOpportunities: "Aviation IT Specialist.",
+        department: "ICS"
+      }
+    };
+
+    function showCourses() {
+      const strand = document.getElementById('strand').value;
+      const list = document.getElementById('recommendation-list');
+      const reasonText = document.getElementById('strand-reason');
+      const recommendations = document.getElementById('recommendations');
+      list.innerHTML = "";
+      reasonText.textContent = "";
+      document.getElementById('course-details').style.display = "none";
+
+      let recommended = [];
+      let reason = "";
+
+      if (strand === "stem") {
+        recommended = Object.keys(courseDetails);
+        reason = "STEM students align with all aviation-related programs due to their broad science and technology foundation.";
+      } else if (strand === "abm") {
+        recommended = ["Aviation Tourism Major in Travel Management (ILAS)", "Aviation Safety and Security Management (ILAS)", "Aviation Logistics (ILAS)"];
+        reason = "ABM students are suited for aviation business and management roles.";
+      } else if (strand === "humss") {
+        recommended = ["Aviation Communication Major in Flight Operations (ILAS)", "Aviation Safety and Security Management (ILAS)"];
+        reason = "HUMSS students excel in communication and social-focused aviation programs.";
+      } else if (strand === "gas") {
+        recommended = ["Aviation Logistics (ILAS)", "Aviation Tourism Major in Travel Management (ILAS)", "Aviation Information System (ICS)"];
+        reason = "GAS students can explore versatile roles in tourism, logistics, or IT in aviation.";
+      } else if (strand === "tvl") {
+        recommended = ["Aviation Safety and Security Management (ILAS)", "Aviation Logistics (ILAS)", "Aviation Information System (ICS)"];
+        reason = "TVL students are ideal for practical aviation roles in security, logistics, and IT.";
+      }
+
+      recommended.forEach(course => {
+        const listItem = document.createElement('li');
+        listItem.textContent = course;
+        listItem.onclick = () => showCourseDetails(course);
+        list.appendChild(listItem);
+      });
+
+      reasonText.textContent = reason;
+      recommendations.style.display = "block";
+      scrollToMiddle(recommendations);
+    }
+
+    function showCourseDetails(courseName) {
+      const course = courseDetails[courseName];
+      document.getElementById('course-name').textContent = courseName;
+      document.getElementById('course-program').textContent = course.program;
+      document.getElementById('course-skills').textContent = course.skills;
+      document.getElementById('course-jobs').textContent = course.jobOpportunities;
+      document.getElementById('course-department').textContent = course.department;
+
+      document.getElementById('course-details').style.display = "block";
+      scrollToMiddle(document.getElementById('course-details'));
+    }
+
+    function scrollToMiddle(element) {
+      const offsetPosition = element.getBoundingClientRect().top + window.pageYOffset - window.innerHeight / 2;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showConfirmation(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value;
+      alert(`Thank you for messaging us, ${name}. Please check your email for a response.`);
+      document.getElementById('contactForm').reset();
+    }
+
+    window.onscroll = function () {
+      const topBtn = document.getElementById("topBtn");
+      topBtn.style.display = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? "block" : "none";
+    }
+  </script>
+</body>
+</html>
+
+
+
+
